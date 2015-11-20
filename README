@@ -1,0 +1,16 @@
+gulp-webapp-starter
+===================
+
+This is a starter project that I use for creating a front end application using gulp as my tooling
+system with a basic front-end asset pipeline.
+
+To build:
+
+1) npm install
+2) bower install
+3) gulp
+
+To debug:
+
+3) gulp connect
+
