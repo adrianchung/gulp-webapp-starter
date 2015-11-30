@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/adrianchung/dev/web/gulp-webapp-starter",
+			"folder_exclude_patterns": ["dist", "build"]
+		}
+	]
+}
