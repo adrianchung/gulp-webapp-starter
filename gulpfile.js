@@ -25,12 +25,8 @@ gulp.task('clean', function() {
         .pipe(clean());
 });
 
-gulp.task('bower-install', function() {
-    return bower();
-});
-
 var bowerSrcs = ['./src/bower_components/**'];
-gulp.task('bower', ['bower-install'], function () {
+gulp.task('bower', function () {
     return gulp
         .src(bowerSrcs)
         .pipe(gulp.dest('./dist/bower_components'));
