@@ -5,7 +5,7 @@
         .controller('DashboardController', [
             '$scope',
             function($scope) {
-                $scope.message = 'foo';
+                $scope.message = 'Something interesting about me';
             }
         ]);
 }());

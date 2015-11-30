@@ -1,5 +1,7 @@
 var gulp = require('gulp');
 var connect = require('gulp-connect');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var minifyCSS = require('gulp-minify-css');
@@ -52,6 +54,11 @@ var imagesSrc = ['./src/**/*.png', './src/**/*.gif', './src/**/*.ico', './src/**
 gulp.task('images', function() {
     return gulp
         .src(imagesSrc)
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
         .pipe(gulp.dest('./dist/'))
         .pipe(connect.reload());
 });
@@ -101,7 +108,8 @@ gulp.task('fonts', function() {
 gulp.task('watch', ['default'], function() {
     gulp.watch(jsSrcs, ['js', 'jshint']);
     gulp.watch(bowerSrcs, ['bower']);
-    gulp.watch(imagesSrc, ['images']);
+    // TODO(AC) Image watching doesn't work so you need to manually `gulp images`
+    //gulp.watch(imagesSrc, ['images']);
     gulp.watch(htmlSrcs, ['html']);
     gulp.watch(lessSrcs, ['less']);
     gulp.watch(cssSrcs, ['css']);
