@@ -20,10 +20,11 @@ gulp.task('default', ['clean'], function() {
 });
 
 gulp.task('build', ['js', 'bower', 'jshint', 'images', 'html', 'less', 'css', 'fonts']);
+gulp.task('build-dist', ['build', 'js-dist', 'css-dist']);
 
 gulp.task('clean', function() {
     return gulp
-        .src('dist/*', {read: false})
+        .src(['dist/*', 'public/*'], {read: false})
         .pipe(clean());
 });
 
@@ -31,6 +32,7 @@ var bowerSrcs = ['./src/bower_components/**'];
 gulp.task('bower', function () {
     return gulp
         .src(bowerSrcs)
+        .pipe(gulp.dest('./public/bower_components'))
         .pipe(gulp.dest('./dist/bower_components'));
 });
 
@@ -38,8 +40,15 @@ var jsSrcs = ['./src/**/*.js', '!./src/bower_components/**'];
 gulp.task('js', function() {
     return gulp
         .src(jsSrcs)
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
+});
+
+gulp.task('js-dist', function() {
+    return gulp
+        .src('./public/js/**/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist/js/'))
 });
 
 gulp.task('jshint', function() {
@@ -60,6 +69,7 @@ gulp.task('images', function() {
             use: [pngquant()]
         }))
         .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
 
@@ -69,6 +79,7 @@ gulp.task('html', function () {
         .src(htmlSrcs)
         .pipe(preprocess())
         .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
 
@@ -80,7 +91,7 @@ gulp.task('less', function() {
             paths: [path.join(__dirname, 'less', 'includes')]
         }))
         .pipe(minifyCSS({comments: true, spare: true}))
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
 
@@ -88,8 +99,15 @@ var cssSrcs = ['./src/**/*.css', '!./src/bower_components/**'];
 gulp.task('css', function() {
     return gulp
         .src(cssSrcs)
-        .pipe(gulp.dest('./dist/'))
+        .pipe(minifyCSS({comments: true, spare: true}))
+        .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
+});
+
+gulp.task('css-dist', function() {
+    return gulp
+        .src('./public/css/**/*.css')
+        .pipe(gulp.dest('./dist/css/'));
 });
 
 var fontsSrcs = [
@@ -102,6 +120,7 @@ gulp.task('fonts', function() {
     return gulp
         .src(fontsSrcs)
         .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
 
@@ -118,7 +137,7 @@ gulp.task('watch', ['default'], function() {
 
 gulp.task('connect', ['watch'], function() {
     connect.server({
-        root: './dist/',
+        root: './public/',
         port: 8888,
         livereload: true
     });
