@@ -1,18 +1,18 @@
-var gulp = require('gulp');
-var connect = require('gulp-connect');
-var imagemin = require('gulp-imagemin');
-var pngquant = require('imagemin-pngquant');
-var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var minifyCSS = require('gulp-minify-css');
-var less = require('gulp-less');
-var clean = require('gulp-clean');
-var watch = require('gulp-watch');
-var preprocess = require('gulp-preprocess');
-var bower = require('gulp-bower')
-var path = require('path');
+const gulp = require('gulp');
+const connect = require('gulp-connect');
+const imagemin = require('gulp-imagemin');
+const pngquant = require('imagemin-pngquant');
+const jshint = require('gulp-jshint');
+const uglify = require('gulp-uglify');
+const minifyCSS = require('gulp-minify-css');
+const less = require('gulp-less');
+const clean = require('gulp-clean');
+const watch = require('gulp-watch');
+const preprocess = require('gulp-preprocess');
+const bower = require('gulp-bower')
+const path = require('path');
 
-var checkstyleFileReporter = require('jshint-checkstyle-file-reporter');
+const checkstyleFileReporter = require('jshint-checkstyle-file-reporter');
 process.env.JSHINT_CHECKSTYLE_FILE = 'checkstyle-result.xml';
 
 gulp.task('default', ['clean'], function() {
@@ -28,7 +28,7 @@ gulp.task('clean', function() {
         .pipe(clean());
 });
 
-var bowerSrcs = ['./src/bower_components/**'];
+const bowerSrcs = ['./src/bower_components/**'];
 gulp.task('bower', function () {
     return gulp
         .src(bowerSrcs)
@@ -36,7 +36,7 @@ gulp.task('bower', function () {
         .pipe(gulp.dest('./dist/bower_components'));
 });
 
-var jsSrcs = ['./src/**/*.js', '!./src/bower_components/**'];
+const jsSrcs = ['./src/**/*.js', '!./src/bower_components/**'];
 gulp.task('js', function() {
     return gulp
         .src(jsSrcs)
@@ -59,7 +59,7 @@ gulp.task('jshint', function() {
         .pipe(jshint.reporter('fail'));
 });
 
-var imagesSrc = ['./src/**/*.png', './src/**/*.gif', './src/**/*.ico', './src/**/*.jpg', '!./src/bower_components/**'];
+const imagesSrc = ['./src/**/*.png', './src/**/*.gif', './src/**/*.ico', './src/**/*.jpg', '!./src/bower_components/**'];
 gulp.task('images', function() {
     return gulp
         .src(imagesSrc)
@@ -73,7 +73,7 @@ gulp.task('images', function() {
         .pipe(connect.reload());
 });
 
-var htmlSrcs = ['./src/**/*.html'];
+const htmlSrcs = ['./src/**/*.html'];
 gulp.task('html', function () {
     return gulp
         .src(htmlSrcs)
@@ -83,7 +83,7 @@ gulp.task('html', function () {
         .pipe(connect.reload());
 });
 
-var lessSrcs = ['./src/**/*.less', '!./src/bower_components/**'];
+const lessSrcs = ['./src/**/*.less', '!./src/bower_components/**'];
 gulp.task('less', function() {
     return gulp
         .src(lessSrcs)
@@ -95,7 +95,7 @@ gulp.task('less', function() {
         .pipe(connect.reload());
 });
 
-var cssSrcs = ['./src/**/*.css', '!./src/bower_components/**'];
+const cssSrcs = ['./src/**/*.css', '!./src/bower_components/**'];
 gulp.task('css', function() {
     return gulp
         .src(cssSrcs)
@@ -110,7 +110,7 @@ gulp.task('css-dist', function() {
         .pipe(gulp.dest('./dist/css/'));
 });
 
-var fontsSrcs = [
+const fontsSrcs = [
     './src/**/*.woff2',
     './src/**/*.woff',
     './src/**/*.ttf',
