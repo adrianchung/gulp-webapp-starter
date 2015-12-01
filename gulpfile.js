@@ -1,8 +1,10 @@
 const gulp = require('gulp');
 const connect = require('gulp-connect');
 const imagemin = require('gulp-imagemin');
-const pngquant = require('imagemin-pngquant');
 const jshint = require('gulp-jshint');
+const ngAnnotate = require('gulp-ng-annotate')
+const pngquant = require('imagemin-pngquant');
+const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 const minifyCSS = require('gulp-minify-css');
 const less = require('gulp-less');
@@ -47,7 +49,10 @@ gulp.task('js', function() {
 gulp.task('js-dist', function() {
     return gulp
         .src('./public/js/**/*.js')
-        .pipe(uglify())
+        .pipe(sourcemaps.init())
+          .pipe(uglify())
+          .pipe(ngAnnotate())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('./dist/js/'))
 });
 
