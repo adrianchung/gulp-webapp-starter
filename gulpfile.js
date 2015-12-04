@@ -1,12 +1,14 @@
 const gulp = require('gulp');
 const connect = require('gulp-connect');
+const gulpif = require('gulp-if');
 const imagemin = require('gulp-imagemin');
 const jshint = require('gulp-jshint');
 const ngAnnotate = require('gulp-ng-annotate')
 const pngquant = require('imagemin-pngquant');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
-const minifyCSS = require('gulp-minify-css');
+const useref = require('gulp-useref');
+const minifyCss = require('gulp-minify-css');
 const less = require('gulp-less');
 const clean = require('gulp-clean');
 const watch = require('gulp-watch');
@@ -22,7 +24,7 @@ gulp.task('default', ['clean'], function() {
 });
 
 gulp.task('build', ['js', 'bower', 'jshint', 'images', 'html', 'less', 'css', 'fonts']);
-gulp.task('build-dist', ['build', 'js-dist', 'css-dist']);
+gulp.task('build-dist', ['build', 'useref']);
 
 gulp.task('clean', function() {
     return gulp
@@ -46,15 +48,15 @@ gulp.task('js', function() {
         .pipe(connect.reload());
 });
 
-gulp.task('js-dist', function() {
-    return gulp
-        .src('./public/js/**/*.js')
-        .pipe(sourcemaps.init())
-          .pipe(uglify())
-          .pipe(ngAnnotate())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./dist/js/'))
-});
+// gulp.task('js-dist', function() {
+//     return gulp
+//         .src('./public/js/**/*.js')
+//         .pipe(sourcemaps.init())
+//           .pipe(ngAnnotate())
+//           .pipe(uglify())
+//         .pipe(sourcemaps.write())
+//         .pipe(gulp.dest('./dist/js/'))
+// });
 
 gulp.task('jshint', function() {
     return gulp
@@ -88,6 +90,15 @@ gulp.task('html', function () {
         .pipe(connect.reload());
 });
 
+gulp.task('useref', ['build'], function() {
+    return gulp.src(['./public/index.html', './public/partials/**/*.html'])
+        .pipe(useref())
+        .pipe(gulpif('*.js', ngAnnotate()))
+        .pipe(gulpif('*.js', uglify()))
+        .pipe(gulpif('*.css', minifyCss()))
+        .pipe(gulp.dest('./dist/'))
+});
+
 const lessSrcs = ['./src/**/*.less', '!./src/bower_components/**'];
 gulp.task('less', function() {
     return gulp
@@ -95,7 +106,6 @@ gulp.task('less', function() {
         .pipe(less({
             paths: [path.join(__dirname, 'less', 'includes')]
         }))
-        .pipe(minifyCSS({comments: true, spare: true}))
         .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
@@ -104,16 +114,15 @@ const cssSrcs = ['./src/**/*.css', '!./src/bower_components/**'];
 gulp.task('css', function() {
     return gulp
         .src(cssSrcs)
-        .pipe(minifyCSS({comments: true, spare: true}))
         .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
 
-gulp.task('css-dist', function() {
-    return gulp
-        .src('./public/css/**/*.css')
-        .pipe(gulp.dest('./dist/css/'));
-});
+// gulp.task('css-dist', function() {
+//     return gulp
+//         .src('./public/css/**/*.css')
+//         .pipe(gulp.dest('./dist/css/'));
+// });
 
 const fontsSrcs = [
     './src/**/*.woff2',
