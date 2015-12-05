@@ -1,8 +1,9 @@
 const gulp = require('gulp');
+const babel = require('gulp-babel');
 const connect = require('gulp-connect');
+const eslint = require('gulp-eslint');
 const gulpif = require('gulp-if');
 const imagemin = require('gulp-imagemin');
-const jshint = require('gulp-jshint');
 const ngAnnotate = require('gulp-ng-annotate')
 const pngquant = require('imagemin-pngquant');
 const sourcemaps = require('gulp-sourcemaps');
@@ -16,14 +17,11 @@ const preprocess = require('gulp-preprocess');
 const bower = require('gulp-bower')
 const path = require('path');
 
-const checkstyleFileReporter = require('jshint-checkstyle-file-reporter');
-process.env.JSHINT_CHECKSTYLE_FILE = 'checkstyle-result.xml';
-
 gulp.task('default', ['clean'], function() {
     return gulp.start('build');
 });
 
-gulp.task('build', ['js', 'bower', 'jshint', 'images', 'html', 'less', 'css', 'fonts']);
+gulp.task('build', ['js', 'bower', 'jslint', 'images', 'html', 'less', 'css', 'fonts']);
 gulp.task('build-dist', ['build', 'useref']);
 
 gulp.task('clean', function() {
@@ -44,6 +42,9 @@ const jsSrcs = ['./src/**/*.js', '!./src/bower_components/**'];
 gulp.task('js', function() {
     return gulp
         .src(jsSrcs)
+        .pipe(babel({
+            presets: ['es2015']
+        }))
         .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
@@ -58,12 +59,12 @@ gulp.task('js', function() {
 //         .pipe(gulp.dest('./dist/js/'))
 // });
 
-gulp.task('jshint', function() {
+gulp.task('jslint', function() {
     return gulp
         .src(jsSrcs)
-        .pipe(jshint())
-        .pipe(jshint.reporter(checkstyleFileReporter))
-        .pipe(jshint.reporter('fail'));
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
 });
 
 const imagesSrc = ['./src/**/*.png', './src/**/*.gif', './src/**/*.ico', './src/**/*.jpg', '!./src/bower_components/**'];
@@ -139,7 +140,7 @@ gulp.task('fonts', function() {
 });
 
 gulp.task('watch', ['default'], function() {
-    gulp.watch(jsSrcs, ['js', 'jshint']);
+    gulp.watch(jsSrcs, ['js', 'jslint']);
     gulp.watch(bowerSrcs, ['bower']);
     // TODO(AC) Image watching doesn't work so you need to manually `gulp images`
     //gulp.watch(imagesSrc, ['images']);

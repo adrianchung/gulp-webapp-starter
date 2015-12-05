@@ -5,7 +5,8 @@
         .controller('DashboardController', [
             '$scope',
             function($scope) {
-                $scope.message = 'Something interesting about me';
+                const constMessage = 'Something interesting about me';
+                $scope.message = constMessage;
             }
         ]);
 }());
