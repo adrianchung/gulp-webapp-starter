@@ -8,9 +8,12 @@ To build:
 
 1) npm install
 2) bower install
-3) gulp
+3) gulp build -- Leaves files in public/
 
 To debug:
 
-3) gulp connect
+gulp connect
 
+To build:
+
+gulp build-dist -- Leaves files in dist/
