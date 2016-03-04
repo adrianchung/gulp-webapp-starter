@@ -49,16 +49,6 @@ gulp.task('js', function() {
         .pipe(connect.reload());
 });
 
-// gulp.task('js-dist', function() {
-//     return gulp
-//         .src('./public/js/**/*.js')
-//         .pipe(sourcemaps.init())
-//           .pipe(ngAnnotate())
-//           .pipe(uglify())
-//         .pipe(sourcemaps.write())
-//         .pipe(gulp.dest('./dist/js/'))
-// });
-
 gulp.task('jslint', function() {
     return gulp
         .src(jsSrcs)
@@ -118,12 +108,6 @@ gulp.task('css', function() {
         .pipe(gulp.dest('./public/'))
         .pipe(connect.reload());
 });
-
-// gulp.task('css-dist', function() {
-//     return gulp
-//         .src('./public/css/**/*.css')
-//         .pipe(gulp.dest('./dist/css/'));
-// });
 
 const fontsSrcs = [
     './src/**/*.woff2',
